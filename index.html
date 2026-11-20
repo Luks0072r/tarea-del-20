@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Guía de Git y GitHub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=IBM+Plex+Mono:wght@400;500&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<button class="menu-btn" id="menuBtn" aria-label="Abrir menú" aria-expanded="false">Menú</button>
+
+<nav class="side" id="side" aria-label="Contenido">
+  <a class="brand" href="#inicio">git<span>log</span></a>
+  <ol class="graph">
+    <li><a href="#inicio">Qué es Git</a></li>
+    <li><a href="#instalar">Instalar y configurar</a></li>
+    <li><a href="#basico">Flujo básico</a></li>
+    <li><a href="#ramas">Ramas</a></li>
+    <li><a href="#conflictos">Fusionar y conflictos</a></li>
+    <li><a href="#github">Conectar con GitHub</a></li>
+    <li><a href="#pr">Pull requests</a></li>
+    <li><a href="#deshacer">Deshacer cambios</a></li>
+    <li><a href="#ignore">Archivos ignorados</a></li>
+    <li><a href="#buenas">Buenas prácticas</a></li>
+    <li><a href="#chuleta">Chuleta de comandos</a></li>
+  </ol>
+</nav>
+
+<main>
+  <header class="hero" id="inicio">
+    <h1>Git y GitHub, paso a paso</h1>
+    <p class="lead">Aprende a guardar la historia de tu código, trabajar en ramas y colaborar con otras personas. Cada sección es un commit en el camino.</p>
+    <div class="legend">
+      <div><b>Git</b> es el programa que corre en tu computadora y registra los cambios de tus archivos.</div>
+      <div><b>GitHub</b> es un sitio web que guarda tus repositorios en línea y facilita colaborar.</div>
+    </div>
+  </header>
+
+  <section id="instalar">
+    <h2>Instalar y configurar</h2>
+    <p>Descarga Git desde <a href="https://git-scm.com/downloads" target="_blank" rel="noopener">git-scm.com</a> y comprueba la instalación:</p>
+    <pre><code>git --version</code></pre>
+    <p>Antes de tu primer commit, dile a Git quién eres. Este nombre aparecerá en cada cambio que guardes.</p>
+    <pre><code>git config --global user.name "Tu Nombre"
+git config --global user.email "tu@correo.com"
+git config --global init.defaultBranch main</code></pre>
+  </section>
+
+  <section id="basico">
+    <h2>Flujo básico</h2>
+    <p>Un archivo pasa por tres zonas: tu carpeta de trabajo, el <em>área de preparación</em> (staging) y el repositorio.</p>
+    <div class="flow" aria-label="Zonas de Git">
+      <div><b>Carpeta de trabajo</b><span>editas archivos</span></div>
+      <i>git add</i>
+      <div><b>Staging</b><span>eliges qué guardar</span></div>
+      <i>git commit</i>
+      <div><b>Repositorio</b><span>queda en la historia</span></div>
+    </div>
+    <pre><code>git init                      # crea un repositorio nuevo
+git status                    # ve qué cambió
+git add archivo.txt           # prepara un archivo
+git add .                     # prepara todo
+git commit -m "Agrega la página de inicio"
+git log --oneline --graph     # revisa la historia</code></pre>
+    <p class="note">Un buen mensaje de commit dice <b>qué cambió y por qué</b>, en pocas palabras y en presente: "Corrige el cálculo del total".</p>
+  </section>
+
+  <section id="ramas">
+    <h2>Ramas</h2>
+    <p>Una rama es una línea de trabajo independiente. Te permite probar ideas sin tocar la versión estable (<code>main</code>).</p>
+    <pre><code>git branch                    # lista las ramas
+git switch -c nueva-funcion   # crea y cambia a una rama
+git switch main               # vuelve a main
+git branch -d nueva-funcion   # borra una rama ya fusionada</code></pre>
+  </section>
+
+  <section id="conflictos">
+    <h2>Fusionar y conflictos</h2>
+    <p>Cuando termines en tu rama, fusiónala con <code>main</code>:</p>
+    <pre><code>git switch main
+git merge nueva-funcion</code></pre>
+    <p>Si dos ramas cambian las mismas líneas, Git te pedirá resolver un <b>conflicto</b>. Abre el archivo y verás marcas como estas:</p>
+    <pre><code>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+titulo = "Versión de main"
+=======
+titulo = "Versión de tu rama"
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; nueva-funcion</code></pre>
+    <ol class="steps">
+      <li>Deja solo el texto final que quieres y borra las marcas.</li>
+      <li>Ejecuta <code>git add archivo</code>.</li>
+      <li>Termina con <code>git commit</code>.</li>
+    </ol>
+  </section>
+
+  <section id="github">
+    <h2>Conectar con GitHub</h2>
+    <ol class="steps">
+      <li>Crea una cuenta en <a href="https://github.com" target="_blank" rel="noopener">github.com</a> y un repositorio nuevo vacío.</li>
+      <li>Copia la URL del repositorio (HTTPS o SSH).</li>
+      <li>Conéctalo y sube tu trabajo:</li>
+    </ol>
+    <pre><code>git remote add origin https://github.com/usuario/mi-repo.git
+git push -u origin main</code></pre>
+    <p>Para traer un repositorio que ya existe, o actualizar el tuyo:</p>
+    <pre><code>git clone https://github.com/usuario/mi-repo.git
+git pull                      # descarga y fusiona cambios remotos
+git fetch                     # descarga sin fusionar</code></pre>
+    <p class="note">GitHub ya no acepta contraseñas en la terminal. Usa una clave SSH o un token de acceso personal, o instala <a href="https://cli.github.com" target="_blank" rel="noopener">GitHub CLI</a> y ejecuta <code>gh auth login</code>.</p>
+  </section>
+
+  <section id="pr">
+    <h2>Pull requests</h2>
+    <p>Un pull request (PR) es una propuesta para fusionar tu rama en otra. Sirve para que el equipo revise el código antes de integrarlo.</p>
+    <ol class="steps">
+      <li>Crea una rama y haz tus commits.</li>
+      <li>Súbela: <code>git push -u origin nueva-funcion</code>.</li>
+      <li>En GitHub, pulsa <b>Compare &amp; pull request</b> y describe el cambio.</li>
+      <li>Atiende los comentarios con nuevos commits en la misma rama.</li>
+      <li>Cuando lo aprueben, pulsa <b>Merge</b> y actualiza tu copia local con <code>git pull</code>.</li>
+    </ol>
+    <p>Si quieres contribuir a un proyecto ajeno, primero haz un <b>fork</b> (tu propia copia en GitHub) y abre el PR desde ahí.</p>
+  </section>
+
+  <section id="deshacer">
+    <h2>Deshacer cambios</h2>
+    <p>Elige el comando según lo que quieras revertir:</p>
+    <pre><code>git restore archivo.txt            # descarta cambios sin preparar
+git restore --staged archivo.txt   # saca un archivo del staging
+git commit --amend -m "Nuevo mensaje"   # corrige el último commit
+git revert abc1234                 # crea un commit que anula otro
+git reset --hard abc1234           # vuelve atrás y BORRA cambios</code></pre>
+    <p class="warn">Evita <code>reset --hard</code> y <code>push --force</code> en ramas compartidas: pueden borrar trabajo de otras personas. Para historia ya publicada, usa <code>revert</code>.</p>
+  </section>
+
+  <section id="ignore">
+    <h2>Archivos ignorados</h2>
+    <p>Crea un archivo <code>.gitignore</code> en la raíz para que Git no registre archivos generados o secretos.</p>
+    <pre><code>node_modules/
+.env
+*.log
+.DS_Store
+dist/</code></pre>
+    <p class="warn">Nunca subas contraseñas ni claves. Si ocurre, cámbialas de inmediato: borrar el archivo después no elimina la historia.</p>
+  </section>
+
+  <section id="buenas">
+    <h2>Buenas prácticas</h2>
+    <ul class="checks">
+      <li>Haz commits pequeños que hagan una sola cosa.</li>
+      <li>Trabaja en una rama por cada tarea y deja <code>main</code> estable.</li>
+      <li>Ejecuta <code>git pull</code> antes de empezar a trabajar.</li>
+      <li>Revisa con <code>git status</code> y <code>git diff</code> antes de hacer commit.</li>
+      <li>Escribe un <code>README.md</code> que explique qué hace el proyecto y cómo usarlo.</li>
+    </ul>
+  </section>
+
+  <section id="chuleta">
+    <h2>Chuleta de comandos</h2>
+    <label class="search">
+      <span>Buscar comando</span>
+      <input type="search" id="filter" placeholder="Prueba con: rama, subir, deshacer…" autocomplete="off">
+    </label>
+    <div class="table-wrap">
+      <table id="cheat">
+        <thead><tr><th>Comando</th><th>Qué hace</th></tr></thead>
+        <tbody>
+          <tr><td><code>git init</code></td><td>Crea un repositorio nuevo</td></tr>
+          <tr><td><code>git clone URL</code></td><td>Copia un repositorio remoto</td></tr>
+          <tr><td><code>git status</code></td><td>Muestra el estado de los archivos</td></tr>
+          <tr><td><code>git add .</code></td><td>Prepara todos los cambios para commit</td></tr>
+          <tr><td><code>git commit -m "msg"</code></td><td>Guarda los cambios preparados</td></tr>
+          <tr><td><code>git diff</code></td><td>Muestra las diferencias línea por línea</td></tr>
+          <tr><td><code>git log --oneline</code></td><td>Lista la historia en una línea por commit</td></tr>
+          <tr><td><code>git branch</code></td><td>Lista las ramas</td></tr>
+          <tr><td><code>git switch -c rama</code></td><td>Crea una rama y cambia a ella</td></tr>
+          <tr><td><code>git merge rama</code></td><td>Fusiona una rama en la actual</td></tr>
+          <tr><td><code>git push</code></td><td>Sube commits a GitHub</td></tr>
+          <tr><td><code>git pull</code></td><td>Descarga y fusiona cambios remotos</td></tr>
+          <tr><td><code>git stash</code></td><td>Guarda cambios temporalmente sin commit</td></tr>
+          <tr><td><code>git stash pop</code></td><td>Recupera los cambios guardados</td></tr>
+          <tr><td><code>git restore archivo</code></td><td>Deshacer cambios de un archivo</td></tr>
+          <tr><td><code>git revert hash</code></td><td>Anula un commit sin borrar la historia</td></tr>
+          <tr><td><code>git tag v1.0</code></td><td>Marca una versión importante</td></tr>
+        </tbody>
+      </table>
+      <p class="empty" id="empty" hidden>No hay comandos que coincidan. Prueba con otra palabra.</p>
+    </div>
+  </section>
+
+  <footer>Guía de Git y GitHub. Documentación oficial: <a href="https://git-scm.com/doc" target="_blank" rel="noopener">git-scm.com/doc</a> y <a href="https://docs.github.com/es" target="_blank" rel="noopener">docs.github.com</a>.</footer>
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>
